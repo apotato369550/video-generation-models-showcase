@@ -13,14 +13,13 @@ MODELS = {
     "wan_2_6": {
         "model": "wan/2-6-image-to-video",
         "input": {
-            "duration": "10",
+            "duration": "5",
             "resolution": "1080p"
         }
     },
     "wan_2_6_flash": {
-        "model": "wan/2-6-flash-image-to-video",
+        "model": "wan/2-2-a14b-image-to-video-turbo",
         "input": {
-            "duration": "5",
             "resolution": "720p"
         }
     },
@@ -34,7 +33,7 @@ MODELS = {
     "wan_2_2": {
         "model": "wan/2-2-a14b-image-to-video-turbo",
         "input": {
-            "duration": "5"
+            "resolution": "720p"
         }
     }
 }
@@ -42,14 +41,17 @@ MODELS = {
 FLAGSHIP = "wan_2_6"
 
 
-def run_model(key: str = FLAGSHIP) -> str:
+def run_model(key=FLAGSHIP):
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
-
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "prompt": PROMPT, "image_urls": [image_url]}
-
+    cfg = MODELS[key]
+    input_params = {**cfg["input"], "prompt": PROMPT}
+    if key == "wan_2_6":
+        input_params["image_urls"] = [image_url]
+    else:
+        input_params["image_url"] = image_url
+    payload = {"model": cfg["model"], "input": input_params}
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
