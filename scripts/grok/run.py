@@ -13,8 +13,8 @@ MODELS = {
     "grok_imagine": {
         "model": "grok-imagine/image-to-video",
         "input": {
-            "duration": 10,
-            "aspect_ratio": "16:9",
+            "duration": "6",
+            "mode": "normal",
             "resolution": "720p"
         }
     }
@@ -28,8 +28,8 @@ def run_model(key: str = FLAGSHIP) -> str:
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
 
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "prompt": PROMPT, "image_url": image_url}
+    input_params = {**MODELS[key]["input"], "image_urls": [image_url], "prompt": PROMPT}
+    payload = {"model": MODELS[key]["model"], "input": input_params}
 
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
