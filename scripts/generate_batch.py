@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-PROVIDERS = ["kling", "bytedance", "hailuo", "sora", "wan", "grok", "veo", "runway"]
+PROVIDERS = ["kling", "bytedance", "hailuo", "sora", "wan", "grok", "runway"]
 
 
 def load_provider(name: str):
