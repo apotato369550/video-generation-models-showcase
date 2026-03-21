@@ -11,25 +11,20 @@ PROVIDER = "kling"
 
 MODELS = {
     "kling_3_0": {
-        "model": "kling/v3-0-image-to-video",
+        "model": "kling-3.0/video",
         "input": {
             "duration": "10",
-            "cfg_scale": 0.5
+            "mode": "pro",
+            "aspect_ratio": "16:9",
+            "sound": False,
+            "multi_shots": False
         }
     },
     "kling_2_6": {
-        "model": "kling/v2-6-image-to-video",
+        "model": "kling-2.6/image-to-video",
         "input": {
             "duration": "10",
             "aspect_ratio": "16:9",
-            "cfg_scale": 0.5,
-            "negative_prompt": "blur, distortion, watermark"
-        }
-    },
-    "kling_2_5_turbo": {
-        "model": "kling/v2-5-turbo-image-to-video-pro",
-        "input": {
-            "duration": "10",
             "cfg_scale": 0.5
         }
     },
@@ -40,14 +35,14 @@ MODELS = {
         }
     },
     "kling_2_1_pro": {
-        "model": "kling/v2-1-pro-image-to-video",
+        "model": "kling/v2-1-pro",
         "input": {
             "duration": "10",
             "cfg_scale": 0.5
         }
     },
     "kling_2_1_standard": {
-        "model": "kling/v2-1-standard-image-to-video",
+        "model": "kling/v2-1-standard",
         "input": {
             "duration": "10",
             "cfg_scale": 0.5
@@ -61,8 +56,13 @@ def run_model(key: str = FLAGSHIP) -> str:
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "image_url": image_url, "prompt": PROMPT}
+    cfg = MODELS[key]
+    input_params = {**cfg["input"], "prompt": PROMPT}
+    if key in ("kling_3_0", "kling_2_6"):
+        input_params["image_urls"] = [image_url]
+    else:
+        input_params["image_url"] = image_url
+    payload = {"model": cfg["model"], "input": input_params}
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
