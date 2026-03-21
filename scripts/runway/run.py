@@ -11,23 +11,22 @@ PROVIDER = "runway"
 FLAGSHIP = "runway_10s"
 
 MODELS = {
+    "runway_5s": {
+        "duration": 5,
+        "quality": "720p",
+        "aspectRatio": "16:9",
+        "waterMark": ""
+    },
     "runway_10s": {
-        "model": "runway-duration-10-generate",
         "duration": 10,
         "quality": "720p",
-        "waterMark": "",
-    },
-    "runway_5s": {
-        "model": "runway-duration-5-generate",
-        "duration": 5,
-        "quality": "1080p",
-        "waterMark": "",
-    },
+        "aspectRatio": "16:9",
+        "waterMark": ""
+    }
 }
 
 
 def run_model(key: str = FLAGSHIP) -> str:
-    """Run a Runway model and return the output video path."""
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
@@ -46,32 +45,14 @@ def run_model(key: str = FLAGSHIP) -> str:
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run Runway video generation models")
-    parser.add_argument(
-        "--model",
-        type=str,
-        default=FLAGSHIP,
-        choices=list(MODELS.keys()),
-        help=f"Model to run (default: {FLAGSHIP})",
-    )
-    parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Run all available models sequentially",
-    )
-
-    args = parser.parse_args()
-
-    if args.all:
-        results = {}
-        for model_key in MODELS.keys():
-            try:
-                results[model_key] = run_model(model_key)
-            except Exception as e:
-                print(f"[{PROVIDER}/{model_key}] ERROR: {e}")
-                results[model_key] = None
-        print(f"\n[{PROVIDER}] Results: {results}")
+    import sys as _sys
+    target = _sys.argv[1] if len(_sys.argv) > 1 else FLAGSHIP
+    if target == "all":
+        for k in MODELS:
+            run_model(k)
+    elif target in MODELS:
+        run_model(target)
     else:
-        run_model(args.model)
+        print(f"Unknown model: {target}")
+        print("Available:", list(MODELS.keys()))
+        _sys.exit(1)
