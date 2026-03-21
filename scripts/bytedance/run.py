@@ -11,36 +11,34 @@ PROVIDER = "bytedance"
 
 MODELS = {
     "seedance_1_5_pro": {
-        "model": "bytedance/seedance-1-5-pro",
+        "model": "bytedance/seedance-1.5-pro",
         "input": {
-            "resolution": "1080p",
-            "duration": "10"
+            "aspect_ratio": "16:9",
+            "resolution": "720p",
+            "duration": 8,
+            "fixed_lens": False,
+            "generate_audio": False
         }
     },
     "v1_pro": {
         "model": "bytedance/v1-pro-image-to-video",
         "input": {
             "resolution": "720p",
-            "duration": "5",
-            "camera_fixed": False,
-            "seed": -1,
-            "enable_safety_checker": True
+            "duration": "10"
         }
     },
     "v1_pro_fast": {
         "model": "bytedance/v1-pro-fast-image-to-video",
         "input": {
             "resolution": "720p",
-            "duration": "5",
-            "camera_fixed": False,
-            "seed": -1
+            "duration": "10"
         }
     },
     "v1_lite": {
         "model": "bytedance/v1-lite-image-to-video",
         "input": {
-            "duration": "5",
-            "seed": -1
+            "resolution": "720p",
+            "duration": "10"
         }
     }
 }
@@ -51,8 +49,13 @@ def run_model(key: str = FLAGSHIP) -> str:
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "image_url": image_url, "prompt": PROMPT}
+    cfg = MODELS[key]
+    input_params = {**cfg["input"], "prompt": PROMPT}
+    if key == "seedance_1_5_pro":
+        input_params["input_urls"] = [image_url]
+    else:
+        input_params["image_url"] = image_url
+    payload = {"model": cfg["model"], "input": input_params}
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
