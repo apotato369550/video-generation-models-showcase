@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import utils
 
 IMAGE_PATH, PROMPT = utils.load_inputs()
-image_url = None  # uploaded lazily on first run_model() call
+image_url = None
 
 PROVIDER = "sora"
 
@@ -14,9 +14,8 @@ MODELS = {
         "model": "sora-2-image-to-video",
         "input": {
             "aspect_ratio": "landscape",
-            "n_frames": "10",
-            "remove_watermark": True,
-            "upload_method": "s3"
+            "n_frames": "15",
+            "remove_watermark": True
         }
     },
     "sora2_pro": {
@@ -24,23 +23,7 @@ MODELS = {
         "input": {
             "aspect_ratio": "landscape",
             "n_frames": "15",
-            "remove_watermark": True,
-            "upload_method": "s3"
-        }
-    },
-    "sora2_characters": {
-        "model": "sora-2-characters",
-        "input": {
-            "aspect_ratio": "landscape",
-            "n_frames": "10",
-            "remove_watermark": True
-        }
-    },
-    "sora2_characters_pro": {
-        "model": "sora-2-characters-pro",
-        "input": {
-            "aspect_ratio": "landscape",
-            "n_frames": "15",
+            "size": "standard",
             "remove_watermark": True
         }
     }
@@ -49,14 +32,13 @@ MODELS = {
 FLAGSHIP = "sora2_pro"
 
 
-def run_model(key: str = FLAGSHIP) -> str:
+def run_model(key=FLAGSHIP):
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
-
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "prompt": PROMPT, "image_urls": [image_url]}
-
+    cfg = MODELS[key]
+    input_params = {**cfg["input"], "image_urls": [image_url], "prompt": PROMPT}
+    payload = {"model": cfg["model"], "input": input_params}
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
