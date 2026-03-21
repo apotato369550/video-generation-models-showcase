@@ -27,25 +27,26 @@ MODELS = {
     "hailuo_02_pro": {
         "model": "hailuo/02-image-to-video-pro",
         "input": {
-            "duration": "6"
+            "prompt_optimizer": True
         }
     },
     "hailuo_02_standard": {
         "model": "hailuo/02-image-to-video-standard",
         "input": {
-            "duration": "6"
+            "prompt_optimizer": True
         }
     }
 }
 
 FLAGSHIP = "hailuo_2_3_pro"
 
-def run_model(key: str = FLAGSHIP) -> str:
+def run_model(key=FLAGSHIP):
     global image_url
     if image_url is None:
         image_url = utils.upload_image(IMAGE_PATH)
-    payload = MODELS[key].copy()
-    payload["input"] = {**MODELS[key]["input"], "image_url": image_url, "prompt": PROMPT}
+    cfg = MODELS[key]
+    input_params = {**cfg["input"], "image_url": image_url, "prompt": PROMPT}
+    payload = {"model": cfg["model"], "input": input_params}
     video_url = utils.run_task(key, payload)
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
