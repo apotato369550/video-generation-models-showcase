@@ -17,15 +17,15 @@ MODELS = {
             "mode": "pro",
             "aspect_ratio": "16:9",
             "sound": False,
-            "multi_shots": False
+            "multi_shots": False,
+            "multi_prompt": []
         }
     },
     "kling_2_6": {
         "model": "kling-2.6/image-to-video",
         "input": {
             "duration": "10",
-            "aspect_ratio": "16:9",
-            "cfg_scale": 0.5
+            "sound": False
         }
     },
     "kling_2_1_master": {
