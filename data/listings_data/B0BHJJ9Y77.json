@@ -1,0 +1,53 @@
+{
+  "asin": "B0BHJJ9Y77",
+  "title": "SAMSUNG 990 PRO SSD NVMe M.2 PCIe Gen4, M.2 2280 Internal Solid State Hard Drive, Seq. Read Speeds Up to 7,450 MB/s for High End Computing, Gaming, and Heavy Duty Workstations, MZ-V9P2T0B/AM",
+  "brand": "SAMSUNG",
+  "description": "MEET THE NEXT GEN: Consider this a cheat code; Our Samsung 990 PRO Gen4 SSD helps you reach near max performance with lightning-fast speeds; Whether you’re a hardcore gamer or a tech guru, you’ll get power efficiency built for the final boss\nREACH THE NEXT LEVEL: Gen4 steps up with faster transfer speeds and high-performance bandwidth; With a more than 55% improvement in random performance compared to 980 PRO, it’s here for heavy computing and faster loading\nTHE FASTEST SSD FROM THE WORLD'S FLASH MEMORY BRAND: The speed you need for any occasion; With read and write speeds up to 7450/6900 MB/s you’ll reach near max performance of PCIe 4.0 powering through for any use\nPLAY WITHOUT LIMITS: Give yourself some space with storage capacities from 1TB to 4TB; Sync all your saves and reign supreme in gaming, video editing, data analysis and more\nIT’S A POWER MOVE: Save the power for your performance; Get power efficiency all while experiencing up to 50% improved performance per watt over the 980 PRO; It makes every move more effective with less consumption",
+  "reviews": [
+    {
+      "rating": 5,
+      "comment": "Samsung for the win!A great SSD that's fast, performs awesome and plenty of storage.  Got this for my PC and it was easy to physically install and pretty simple to set it up with disk management.  Everything flies with this: games, file transfers, videos, programs, etc.The specs look great and the heatsink does a good job keeping it cool.This is my second Samsung as they do not disappoint with performance.  Great value!Just check to make sure your motherboard can use it and if so, you won't be disappointed!"
+    },
+    {
+      "rating": 5,
+      "comment": "I'm no fanboy but when it comes to storage, I love Samsung. It used to be Western Digital when I was young but something has happened to them over the years.This is one of their better drives. They do have newer ones targeting AI but unless you're decking out your machine for LLM and have hundreds of gigs of RAM to support it, this will suffice for basically everything except maybe the actual amount of space. So, buy a couple or look for an 8TB.These drives work well. I have a lower model in my desktop by mistake. Honestly though it's so fast compared to \"faster\" models from other brands, I can't tell I bought the wrong one.This one is in one of my laptops. The laptop mount wasn't correct so I had to make a rubber washer for UNDER the SSD which is unusual. Otherwise it mounted fine. Not the drive's fault but the computer.It was recognized perfectly but one note: If your computer has Intel RST/VMD and you intend to use linux, you may need to disable it. This may prevent Windows from booting until re-enabled. Luckily for me, I just deleted Windows. Problem solved. This is a side-note for those of you purchasing these for dual-boot to hopefully save you some headache.Anyway ... 4tb ... super fast .. I have it luks encrypted, full-bore. You simply cannot tell. That's why I love these drives. I work on sensitive projects. Some legal. Some health. Some security. Etc. I run full disk encryption on my project storage and active machines with different keys each obviously and other security measures we won't get into but with this sort of NVME the performance loss is absolutely negligible. For example the \"AI\" nvme is absolutely not needed in my case.I actually do a lot of AI code. Financial predictions to massive patterns that I can't explain here without breaching contract but the point is, the drives are never maxed out even while fully encrypted. My GPU, NPU or CPU always bottlenecks first.The same with Video Games. Even VR games.Basically, there are few cases where this drive will not suffice. You'll know if you truly need better. If you aren't sure then, this drive will probably be perfect but it doesn't hurt to double-check."
+    },
+    {
+      "rating": 5,
+      "comment": "My son plays a lot on his PlayStation Pro 5He downloads a lot of games, and he's looking for better speed and storage performanceI can tell you with all my heart that since I bought the Samsung SSD 990 PROEverything flies faster at a really high speed, waiting times have decreased significantlyAnd of course the big advantage is that there is an extra 2 TB of space for many more games!!It's very worth the money in my opinion for those who often play a lotSuper easy installationYou take off the Sony cover and insert the memory into its designated area and secure it with a screw that's already inside the device, after that you turn on the PlayStation and format the SSD and that's it! Very simple and very successful!Enjoy!"
+    },
+    {
+      "rating": 5,
+      "comment": "I bought a few of these 1.5 years ago, and I decided to finally post a review.  This is a great SSD in many ways:1) Very fast, if you have a PCIe 4 m.2 NVMe slot.  Still pretty fast, even if you don't.2) Very power efficient.  Consumes less power (and generates less heat) than many similar drives.3) Consistently reliable, even when operating at high temperatures.I had one of these in my primary laptop (ThinkPad p14s Gen4 AMD) for about a year, and it did a great job.  A few months back, I replaced it with a bigger drive (WD Black 850 8TB), so I moved this into a fanless embedded server (which unfortunately, only has a PCIe 3.0 bus).I've posted a benchmark I ran this morning using JDiskMark 0.6.0, a platform independent (Java) disk benchmarking tool.  The drive does quite well, even with the slower PCIe 3.0 bus."
+    },
+    {
+      "rating": 5,
+      "comment": "This is for the Samsung SSD 990 PRO 4TBThe 4TB capacity is a game-changer. I've consolidated all my large files—VMs, game libraries, and development assets—onto a single, super-fast drive, finally eliminating my need for multiple separate disks. Downloads and game installs are blazingly fast. My primary use is software development and video editing on my i9-13900K system (Z790). Large project compiles/loading times are noticeably quicker, and my most-played games load instantly. Installed easily into the primary M.2 PCIe 4.0 slot on my Gigabyte Z790 UD AC. Will include benchmarks from the new JDiskMark 0.6.1, clearly shows the threading and performance of each block written.Overall, this is a great mid high-end PCIe 4.0 SSD on the market for demanding users. Highly recommend it!"
+    },
+    {
+      "rating": 5,
+      "comment": "theres genuinely nothing to complain about. Incredible speeds. Effortless compatibility with data migration with the samsung magician app."
+    },
+    {
+      "rating": 5,
+      "comment": "Se la puse a mi PS5 y ha funcionado de maravilla. No tuve problemas al momento de la instalación, es super rápida al momento de transferir algún juego pesado."
+    },
+    {
+      "rating": 5,
+      "comment": "Muy buen producto, llego en su caja sellado y funciona correctamente, se instalo en una tarjeta madre msi x870 tomahawk wifi y hasta el momento no presenta errores."
+    },
+    {
+      "rating": 5,
+      "comment": "Really fast"
+    },
+    {
+      "rating": 5,
+      "comment": "I've been an old fan of the 980 Pro for years, it never failed me.This 990 Pro tops the performance and heat management! The highest temp in Asus NUC 14 Pro (Tall) is 50c under pressure. Just wow!"
+    }
+  ],
+  "images": [
+    "https://m.media-amazon.com/images/I/61ZL9Qpo1-L._AC_SL1320_.jpg",
+    "https://m.media-amazon.com/images/I/61+9ZC7xuiL._AC_SL1200_.jpg",
+    "https://m.media-amazon.com/images/I/610xvDvVatL._AC_SL1200_.jpg"
+  ]
+}
