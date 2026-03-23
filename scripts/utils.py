@@ -58,13 +58,17 @@ PROVIDER_MIN_IMAGE_SIZE = {
 }
 
 
-def load_inputs() -> Tuple[str, str]:
-    """Load image path and prompt text. Respects IMAGE_PATH and PROMPT_FILE env vars."""
-    raw_image = os.environ.get("IMAGE_PATH", "data/sample_image.jpeg")
-    raw_prompt = os.environ.get("PROMPT_FILE", "data/sample_prompt.txt")
-
-    image_path = str(Path(raw_image) if Path(raw_image).is_absolute() else ROOT / raw_image)
-    prompt_path = Path(raw_prompt) if Path(raw_prompt).is_absolute() else ROOT / raw_prompt
+def load_inputs(input_dir=None) -> Tuple[str, str]:
+    """Load image path and prompt text from input_dir or env vars."""
+    if input_dir is not None:
+        dir_path = Path(input_dir) if Path(input_dir).is_absolute() else ROOT / input_dir
+        image_path = str(dir_path / "sample_image.jpeg")
+        prompt_path = dir_path / "sample_prompt.txt"
+    else:
+        raw_image = os.environ.get("IMAGE_PATH", "data/grass_sample/sample_image.jpeg")
+        raw_prompt = os.environ.get("PROMPT_FILE", "data/grass_sample/sample_prompt.txt")
+        image_path = str(Path(raw_image) if Path(raw_image).is_absolute() else ROOT / raw_image)
+        prompt_path = Path(raw_prompt) if Path(raw_prompt).is_absolute() else ROOT / raw_prompt
 
     with open(prompt_path, "r") as f:
         prompt_text = f.read()
@@ -73,6 +77,18 @@ def load_inputs() -> Tuple[str, str]:
     print(f"[utils] Loaded prompt from: {prompt_path}")
 
     return image_path, prompt_text
+
+
+def download_image_from_url(url: str, dest_path: str) -> None:
+    """Download an image from a URL to a local path."""
+    print(f"[utils] Downloading image from: {url}")
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+    with open(dest_path, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+    print(f"[utils] Saved image to: {dest_path}")
 
 
 def upload_image(image_path: str, min_size: int = 256) -> str:
@@ -237,3 +253,21 @@ def output_path(provider: str, model_name: str) -> str:
     path = str(output_dir / filename)
     print(f"[utils] Output path: {path}")
     return path
+
+
+def write_log(
+    provider: str,
+    model: str,
+    run_id: str,
+    log_data: dict
+) -> str:
+    """Write a JSON run log. Returns the log file path."""
+    date_str = datetime.now().strftime("%d-%m-%y")
+    folder_name = f"{date_str}_{model}_{run_id}"
+    log_dir = ROOT / "logs" / provider / folder_name
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"{folder_name}.json"
+    with open(log_path, "w") as f:
+        json.dump(log_data, f, indent=2)
+    print(f"[utils] Log written: {log_path}")
+    return str(log_path)
