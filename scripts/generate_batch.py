@@ -25,13 +25,15 @@ def load_provider(name: str):
     return mod
 
 
-def run_provider(provider_name: str) -> dict:
+def run_provider(provider_name: str, input_dir=None) -> dict:
     """Run all models for a single provider. Returns {model_key: result_path or ERROR}."""
     try:
         mod = load_provider(provider_name)
     except Exception as e:
         print(f"ERROR: Failed to load provider '{provider_name}': {e}")
         return {}
+    if input_dir is not None:
+        mod.INPUT_DIR = input_dir
 
     models = mod.MODELS
     provider = mod.PROVIDER
@@ -60,6 +62,8 @@ def main():
             action="store_true",
             help=f"Run {provider} provider models",
         )
+    parser.add_argument("--input", dest="input_dir", default=None,
+                        help="Directory containing sample_image.jpeg and sample_prompt.txt (default: data/grass_sample/)")
 
     args = parser.parse_args()
     selected = [p for p in PROVIDERS if getattr(args, p)]
@@ -69,7 +73,7 @@ def main():
 
     all_results = {}
     for provider_name in selected:
-        results = run_provider(provider_name)
+        results = run_provider(provider_name, input_dir=args.input_dir)
         all_results[provider_name] = results
 
     print("\n" + "=" * 80)
