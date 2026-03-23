@@ -35,7 +35,7 @@ FLAGSHIP = "sora2_pro"
 def run_model(key=FLAGSHIP):
     global image_url
     if image_url is None:
-        image_url = utils.upload_image(IMAGE_PATH)
+        image_url = utils.upload_image(IMAGE_PATH, utils.PROVIDER_MIN_IMAGE_SIZE.get(PROVIDER, 256))
     cfg = MODELS[key]
     input_params = {**cfg["input"], "image_urls": [image_url], "prompt": PROMPT}
     payload = {"model": cfg["model"], "input": input_params}

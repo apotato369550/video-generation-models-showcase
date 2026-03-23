@@ -45,6 +45,18 @@ UPLOAD_BASE = "https://kieai.redpandaai.co"
 POLL_INTERVAL = 15
 POLL_TIMEOUT = 600
 
+# Minimum image dimension (px) required by each provider.
+# Both width and height are scaled up to this if either falls below it.
+PROVIDER_MIN_IMAGE_SIZE = {
+    "kling":     256,
+    "grok":      256,
+    "hailuo":    300,
+    "bytedance": 256,  # unconfirmed — update if rejected
+    "wan":       256,  # unconfirmed — update if rejected
+    "sora":      256,  # unconfirmed — update if rejected
+    "runway":    256,  # unconfirmed — update if rejected
+}
+
 
 def load_inputs() -> Tuple[str, str]:
     """Load image path and prompt text. Respects IMAGE_PATH and PROMPT_FILE env vars."""
@@ -63,8 +75,8 @@ def load_inputs() -> Tuple[str, str]:
     return image_path, prompt_text
 
 
-def upload_image(image_path: str) -> str:
-    """Upload image to KIE and return fileUrl. Resizes if either dimension < 256px."""
+def upload_image(image_path: str, min_size: int = 256) -> str:
+    """Upload image to KIE and return fileUrl. Resizes if either dimension < min_size px."""
     print(f"[utils] Uploading image: {image_path}")
 
     # Check and resize if necessary
@@ -75,10 +87,10 @@ def upload_image(image_path: str) -> str:
     upload_path = image_path
     temp_file = None
 
-    if width < 256 or height < 256:
-        print(f"[utils] Image too small (min 256px required). Resizing...")
-        # Scale up the short side to 256, preserve aspect ratio
-        scale = max(256 / width, 256 / height)
+    if width < min_size or height < min_size:
+        print(f"[utils] Image too small (min {min_size}px required). Resizing...")
+        # Scale up the short side to min_size, preserve aspect ratio
+        scale = max(min_size / width, min_size / height)
         new_width = int(width * scale)
         new_height = int(height * scale)
         img_resized = img.resize((new_width, new_height), Image.LANCZOS)
@@ -122,41 +134,39 @@ def upload_image(image_path: str) -> str:
                 print(f"[utils] Warning: failed to delete temp file {temp_path}: {e}")
 
 
-def get_task_detail(task_id: str) -> dict:
-    """Fetch task details from API."""
+
+def poll_until_done(task_id: str, poll_endpoint: str = "/api/v1/jobs/recordInfo") -> str:
+    """Poll task until completion, return video URL."""
+    print(f"[utils] Starting poll for task {task_id}")
     headers = {
         "Authorization": f"Bearer {KIE_API_KEY}",
         "Content-Type": "application/json"
     }
-
-    response = requests.get(
-        f"{API_BASE}/api/v1/jobs/recordInfo",
-        params={"taskId": task_id},
-        headers=headers
-    )
-
-    response.raise_for_status()
-    return response.json()
-
-
-def poll_until_done(task_id: str) -> str:
-    """Poll task until completion, return video URL."""
-    print(f"[utils] Starting poll for task {task_id}")
     start_time = time.time()
 
     while time.time() - start_time < POLL_TIMEOUT:
-        data = get_task_detail(task_id)
-        task_data = data.get("data", {})
+        response = requests.get(
+            f"{API_BASE}{poll_endpoint}",
+            params={"taskId": task_id},
+            headers=headers
+        )
+        response.raise_for_status()
+        body = response.json()
+        task_data = (body.get("data") or {})
         state = task_data.get("state")
 
         print(f"[utils] Task {task_id} state: {state}")
 
         if state == "success":
-            result_json = json.loads(task_data.get("resultJson", "{}"))
-            video_urls = result_json.get("resultUrls", [])
-            if not video_urls:
-                raise RuntimeError(f"Task succeeded but no resultUrls in resultJson: {task_data}")
-            video_url = video_urls[0]
+            if poll_endpoint == "/api/v1/runway/record-detail":
+                video_url = (task_data.get("videoInfo") or {}).get("videoUrl")
+            else:
+                result_json = json.loads(task_data.get("resultJson", "{}"))
+                video_urls = result_json.get("resultUrls", [])
+                video_url = video_urls[0] if video_urls else None
+
+            if not video_url:
+                raise RuntimeError(f"Task succeeded but no video URL found: {task_data}")
             print(f"[utils] Task succeeded. Video URL: {video_url}")
             return video_url
 
@@ -170,7 +180,7 @@ def poll_until_done(task_id: str) -> str:
     raise TimeoutError(f"Task {task_id} did not complete within {POLL_TIMEOUT} seconds")
 
 
-def run_task(model_name: str, payload: dict, endpoint: str = "/api/v1/jobs/createTask") -> str:
+def run_task(model_name: str, payload: dict, endpoint: str = "/api/v1/jobs/createTask", poll_endpoint: str = "/api/v1/jobs/recordInfo") -> str:
     """Create and run a task, poll until completion, return video URL."""
     print(f"[utils] Running task for model: {model_name}")
     print(f"[utils] Endpoint: {endpoint}")
@@ -195,7 +205,7 @@ def run_task(model_name: str, payload: dict, endpoint: str = "/api/v1/jobs/creat
     task_id = body["data"]["taskId"]
     print(f"[utils] Task created with ID: {task_id}")
 
-    video_url = poll_until_done(task_id)
+    video_url = poll_until_done(task_id, poll_endpoint)
     return video_url
 
 

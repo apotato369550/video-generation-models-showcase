@@ -55,7 +55,7 @@ FLAGSHIP = "kling_3_0"
 def run_model(key: str = FLAGSHIP) -> str:
     global image_url
     if image_url is None:
-        image_url = utils.upload_image(IMAGE_PATH)
+        image_url = utils.upload_image(IMAGE_PATH, utils.PROVIDER_MIN_IMAGE_SIZE.get(PROVIDER, 256))
     cfg = MODELS[key]
     input_params = {**cfg["input"], "prompt": PROMPT}
     if key in ("kling_3_0", "kling_2_6"):

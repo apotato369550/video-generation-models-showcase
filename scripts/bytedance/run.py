@@ -48,7 +48,7 @@ FLAGSHIP = "seedance_1_5_pro"
 def run_model(key: str = FLAGSHIP) -> str:
     global image_url
     if image_url is None:
-        image_url = utils.upload_image(IMAGE_PATH)
+        image_url = utils.upload_image(IMAGE_PATH, utils.PROVIDER_MIN_IMAGE_SIZE.get(PROVIDER, 256))
     cfg = MODELS[key]
     input_params = {**cfg["input"], "prompt": PROMPT}
     if key == "seedance_1_5_pro":

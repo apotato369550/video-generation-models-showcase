@@ -29,7 +29,7 @@ MODELS = {
 def run_model(key: str = FLAGSHIP) -> str:
     global image_url
     if image_url is None:
-        image_url = utils.upload_image(IMAGE_PATH)
+        image_url = utils.upload_image(IMAGE_PATH, utils.PROVIDER_MIN_IMAGE_SIZE.get(PROVIDER, 256))
 
     payload = {
         **MODELS[key],
@@ -37,7 +37,7 @@ def run_model(key: str = FLAGSHIP) -> str:
         "imageUrl": image_url,
     }
 
-    video_url = utils.run_task(key, payload, endpoint="/api/v1/runway/generate")
+    video_url = utils.run_task(key, payload, endpoint="/api/v1/runway/generate", poll_endpoint="/api/v1/runway/record-detail")
     dest = utils.output_path(PROVIDER, key)
     utils.download_video(video_url, dest)
     print(f"[{PROVIDER}/{key}] saved → {dest}")
