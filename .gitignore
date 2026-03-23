@@ -61,3 +61,6 @@ coverage.xml
 .DS_Store
 Thumbs.db
 docs/work_video_gen_archi_snapshot.md
+
+# Results (generated video outputs)
+results/
